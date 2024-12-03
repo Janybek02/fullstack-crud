@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from "./get/getSlice"
-import PostSlice from './post/PostSlice';
-// import  getImageSlice  from './image/getImage';
+ import DeleteSlice from './reducers/DeleteSlice' 
+import PostSlice from './reducers/PostSlice';
+import  getSlice  from './reducers/getSlice';
+import  changeSlice from './reducers/Change';
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
-    poster: PostSlice,
-
+    get: getSlice,
+    post:PostSlice,
+    delete:DeleteSlice,
+    change:changeSlice,
   },
 });

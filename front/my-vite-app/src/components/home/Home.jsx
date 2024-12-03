@@ -1,17 +1,26 @@
 import { React, useEffect, useNavigate } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addItemAsync } from "../../store/get/getSlice";
+import {
+  getItemAsync,
+  deleteItemsReducer,
+} from "../../store/reducers/getSlice";
+import { deleteItem } from "../../store/reducers/DeleteSlice";
 import { Link } from "react-router-dom";
 import { Registration } from "../registration/Registration";
 import man from "../../img/man.png";
 export const Home = () => {
-  const { status, items, error } = useSelector((state) => state.counter);
+  const { status, items, error } = useSelector((state) => state.get);
   // const {image} = useSelector((state) => state.image.itmes)
   const dispatch = useDispatch();
   useEffect(() => {
-      dispatch(addItemAsync());
+    dispatch(getItemAsync());
   }, []);
-  console.log(items);
+
+  const deleteItems = (id) => {
+      dispatch(deleteItem(id))
+      dispatch(deleteItemsReducer(id))
+  }
+
   return (
     <div className="w-[100%] h-[110vh] bg-white-400">
       <button
@@ -20,13 +29,13 @@ export const Home = () => {
       >
         <Link to={"/registration"}>Create new account</Link>
       </button>
-      <div className=" flex bg-full flex-wrap  items-center justify-between ">
+      <div className=" grid w-full grid-cols-2 gap-3  xl:grid-cols-6 md:grid-cols-4 sm:grid-cols-3  ">
         {items.map((item) => {
           return (
             <>
               <div
                 key={item.id}
-                class="  m-2  w-[250px]  bg-white border border-gray-200 rounded-lg shadow "
+                class=" w-[100%]  hover:-translate-y-3 hover:shadow-xl hover:delay-100 hover:duration-100 hover:ease-in   bg-white border border-gray-200 rounded-lg shadow "
               >
                 <div class="flex px-4 pt-4">
                   <button
@@ -88,28 +97,19 @@ export const Home = () => {
                   <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
                     Bonnie Green
                   </h5>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">
-                    {item.name}
-                  </span>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">
-                    {item.surname}
-                  </span>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">
-                    {item.phone}
-                  </span>
+                  <span class="text-sm text-black">{item.name}</span>
+                  <span class="text-sm text-black ">{item.surname}</span>
+                  <span class="text-sm text-black ">{item.phone}</span>
                   <div class="flex mt-4 md:mt-6">
-                    <a
-                      href="#"
+                    <button
+                      onClick={() => deleteItems(item.id)}
                       class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 "
                     >
-                      Add friend
-                    </a>
-                    <a
-                      href="#"
-                      class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 "
-                    >
-                      Message
-                    </a>
+                      Delete
+                    </button>
+                    <div class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">
+                    <Link to={`/change/${item.id}`}>Change</Link>
+                    </div>
                   </div>
                 </div>
               </div>

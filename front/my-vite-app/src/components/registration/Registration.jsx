@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { getItems } from "../../store/post/PostSlice";
+import { postItems } from "../../store/reducers/PostSlice";
 import { Link } from "react-router-dom";
 import { PiUserBold } from "react-icons/pi";
 import { CgMail } from "react-icons/cg";
@@ -28,7 +28,7 @@ export const Registration = () => {
   const { name, surname, email, phone, password } = registr;
   const handle = (e) => {
     e.preventDefault();
-    dispatch(getItems(registr));
+    dispatch(postItems(registr));
     console.log(registr);
 
     alert("Ваши данные сохранены");
@@ -44,8 +44,8 @@ export const Registration = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-center w-[100%] h-[90%] ">
-        <div className="w-[40%] max-w-[1000px]:w-[60%] bg-[#FFFFFF] h-[720px] text-[22px] rounded-[12px] border-[1px] border-[#CCCCCC] shadow-md">
+      <div className="flex pt-3 items-center justify-center w-[100%] h-[90%] ">
+        <div className=" w-[80%] sm:w-[65%] md:w-[60%]  xl:w-[40%] lg:w-[50%] pb-6 bg-[#FFFFFF] text-[22px] rounded-[12px] border-[1px] border-[#CCCCCC] shadow-md">
           <Link to={"/"}>
             <IoMdArrowRoundBack className=" text-black m-3" />
           </Link>

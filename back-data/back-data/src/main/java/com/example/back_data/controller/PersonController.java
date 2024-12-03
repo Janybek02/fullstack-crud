@@ -17,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin("http://localhost:5173/")
 @RequestMapping("/api")
@@ -47,16 +49,15 @@ public class PersonController {
         }
     }
 
-//    @GetMapping("/image/{id}")
-//    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
-//        byte[] image = personDAO.getImage(id);
-//        if (image == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//        }
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set(HttpHeaders.CONTENT_TYPE, "image/jpeg");
-//        return new ResponseEntity<>(image, headers, HttpStatus.OK);
-//    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deletePerson (@PathVariable Long id) {
+        try {
+            personDAO.deleteItems(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request: " + e.getMessage());
+        }
+    }
 
     @GetMapping("/image/{id}")
     public ResponseEntity<?>  getImageByName(@PathVariable("id") Long name){
@@ -65,5 +66,11 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/png"))
                 .body(image);
+    }
+
+    @PutMapping("/change/{id}")
+    public void changePerson (@PathVariable("id") Long id, @RequestPart("person") Person person, @RequestPart("file") MultipartFile file  ) throws IOException {
+        personDAO.updateItems( id, person, file);
+        System.out.println(file);
     }
 }

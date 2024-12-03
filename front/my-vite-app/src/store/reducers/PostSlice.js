@@ -3,7 +3,7 @@ import axios from "axios";
 
 const url = "http://localhost:8080/api/new";
 
-export const getItems = createAsyncThunk("items/getItems", async (items) => {
+export const postItems = createAsyncThunk("items/postItems", async (items) => {
   const { name, surname, email, phone, password, image } = items;
   // const newImage =  image ? null : null
   const formData = new FormData(); // Capitalized FormData
@@ -39,14 +39,14 @@ const postSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getItems.pending, (state) => {
+      .addCase(postItems.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getItems.fulfilled, (state, action) => {
+      .addCase(postItems.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.users.push(action.payload);
       })
-      .addCase(getItems.rejected, (state, action) => {
+      .addCase(postItems.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

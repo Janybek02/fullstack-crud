@@ -6,6 +6,7 @@ import com.example.back_data.repository.PersonRepository;
 import com.example.back_data.utils.PersonUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,23 +30,45 @@ public class PersonDAO {
        personRepository.save(person);
        return new ImageUploadResponse("image saved successfully");
    }
-
-//   public byte[] getImage (Long id)  {
-//       Optional<Person> person = personRepository.findById(id);
-//       return person.map(Person::getImage).orElse(null);
-//   }
+   public void deleteItems( Long id) {
+       personRepository.deleteById(id);
+   }
 
     @Transactional
     public byte[] getImage(Long name) {
         Optional<Person> dbImage = personRepository.findById(name);
         return PersonUtils.decompressImage(dbImage.get().getImage());
     }
-   @Transactional
-    public Person getInfoByImageByName(String name) {
-        Optional<Person> dbImage = personRepository.findByName(name);
-        return Person.builder()
-                .imageType(dbImage.get().getImageType())
-                .imageUrl(dbImage.get().getImageUrl())
-                .image(PersonUtils.decompressImage(dbImage.get().getImage())).build();
-    }
+    public void updateItems(Long id, Person person, MultipartFile file) throws IOException {
+       Optional<Person>  optionalPerson = personRepository.findById(id);
+       if(optionalPerson.isPresent()) {
+           if (file != null && !file.isEmpty()) {
+               Person person1 = optionalPerson.get();
+               person1.setName(person.getName());
+               person1.setSurname(person.getSurname());
+               person1.setEmail(person.getEmail());
+               person1.setPassword(person.getPassword());
+               person1.setPhone(person.getPhone());
+               person1.setImageType(file.getContentType());
+               person1.setImageUrl(file.getOriginalFilename());
+               person1.setImage(PersonUtils.compressImage(file.getBytes()));
+               personRepository.save(person1);
+           }else {
+               Person person1 = optionalPerson.get();
+               person1.setName(person.getName());
+               person1.setSurname(person.getSurname());
+               person1.setEmail(person.getEmail());
+               person1.setPassword(person.getPassword());
+               person1.setPhone(person.getPhone());
+               personRepository.save(person1);
+           }
+       }
+           else {
+           ResponseEntity.notFound().build();
+       }
+       }
 }
+
+
+
+

@@ -69,7 +69,7 @@ public class PersonController {
     }
 
     @PutMapping("/change/{id}")
-    public void changePerson (@PathVariable("id") Long id, @RequestPart("person") Person person, @RequestPart("file") MultipartFile file  ) throws IOException {
+    public void changePerson (@PathVariable("id") Long id, @RequestPart("person") Person person, @RequestPart( value = "file", required = false ) MultipartFile file  ) throws IOException {
         personDAO.updateItems( id, person, file);
         System.out.println(file);
     }

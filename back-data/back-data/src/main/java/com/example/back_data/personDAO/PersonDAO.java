@@ -42,26 +42,18 @@ public class PersonDAO {
     public void updateItems(Long id, Person person, MultipartFile file) throws IOException {
        Optional<Person>  optionalPerson = personRepository.findById(id);
        if(optionalPerson.isPresent()) {
+           Person person1 = optionalPerson.get();
+           person1.setName(person.getName());
+           person1.setSurname(person.getSurname());
+           person1.setEmail(person.getEmail());
+           person1.setPassword(person.getPassword());
+           person1.setPhone(person.getPhone());
            if (file != null && !file.isEmpty()) {
-               Person person1 = optionalPerson.get();
-               person1.setName(person.getName());
-               person1.setSurname(person.getSurname());
-               person1.setEmail(person.getEmail());
-               person1.setPassword(person.getPassword());
-               person1.setPhone(person.getPhone());
                person1.setImageType(file.getContentType());
                person1.setImageUrl(file.getOriginalFilename());
                person1.setImage(PersonUtils.compressImage(file.getBytes()));
-               personRepository.save(person1);
-           }else {
-               Person person1 = optionalPerson.get();
-               person1.setName(person.getName());
-               person1.setSurname(person.getSurname());
-               person1.setEmail(person.getEmail());
-               person1.setPassword(person.getPassword());
-               person1.setPhone(person.getPhone());
-               personRepository.save(person1);
            }
+           personRepository.save(person1);
        }
            else {
            ResponseEntity.notFound().build();
